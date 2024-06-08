@@ -9,7 +9,7 @@ class Calculator:
     def _perform_operation(a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal],Decimal]) -> Calculation:
         '''perform a calculation, return result.'''
         calculation = Calculation.insert_operation(a, b, operation)
-        Calculations.add_calculation (calculation) # Assuming add_calculation is a method
+        Calculations.add_calculation (calculation) 
         return calculation.perform()
     
     @staticmethod
