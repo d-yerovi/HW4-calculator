@@ -14,7 +14,11 @@ class Calculation:
 
     def perform(self) -> Decimal:
         '''perform the calculation stored'''
-        return self.operation(self.a, self.b)
+        try:
+            return self.operation(self.a, self.b)
+        except ZeroDivisionError: # Throw exception for divide by zero and test that the exception is thrown
+            return None
+        # return self.operation(self.a, self.b)
     
     def __repr__(self):
         '''return a representation of the calculation'''

@@ -27,6 +27,11 @@ class Calculations:
         if cls._latest: return cls._latest 
         else: return None
 
+    @classmethod
+    def get_all_calculations(self):
+        '''Returns a list of all Calculation objects in the history.'''
+        return self.history
+
     @classmethod 
     def search_operation(cls, operation_name: str) -> List[Calculation]:
         '''seach for calculation by operation name'''
