@@ -4,7 +4,7 @@ from decimal import Decimal
 from calculator.calculation import Calculation
 from calculator.operations import add, subtract, multiply, divide
 
-""""""
+# functions to test operations
 def test_operation_add():
     '''Testing the addition operation'''
     calculation = Calculation (Decimal('10'), Decimal('5'), add)

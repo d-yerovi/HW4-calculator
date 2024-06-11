@@ -1,6 +1,10 @@
-import pytest
+"""
+main module for calculator tests cases
+"""
+
 import sys
-from io import StringIO
+#from io import StringIO
+import pytest
 import main
 
 # This test function uses parameterization to run multiple tests with different inputs
@@ -15,14 +19,12 @@ import main
     ("5", "b", 'subtract', "Invalid number input: 5 or b is not a valid number.\n")
 ])
 def test_calculate_and_print(a_string, b_string, operation_string, expected_string, capsys):
+    '''function to get command line arguments for the main function'''
     # Set the command line arguments for the main function
     sys.argv = ['', a_string, b_string, operation_string]
-    
     # Call the main function
     main.main()
-    
     # Capture the output of the main function
     captured = capsys.readouterr()
-    
     # Assert that the captured output matches the expected output
     assert captured.out == expected_string
