@@ -12,30 +12,36 @@ fake = Faker()  # Create a Faker instance
 
 def pytest_addoption(parser):
     """Add a pytest option to specify the number of records to generate"""
+    # Add a command-line option to specify the number of records to generate
     parser.addoption("--num_records", action="store", default=10, type=int,
                      help="Number of records to generate")
 
 @pytest.fixture
 def num_records_to_generate(request):
     """Return the number of records to generate"""
+    # Get the number of records to generate from the pytest command-line option
     return request.config.getoption("--num_records")
 
 @pytest.fixture(params=range(1))
 def records(request):
     """Generate records for testing calculation operations"""
+    # Get the number of records to generate
     num_records = num_records_to_generate(request)
     for _ in range(num_records):
+        # Generate two random decimal numbers
         a = Decimal(str(fake.pydecimal(left_digits=5, right_digits=2)))
         b = Decimal(str(fake.pydecimal(left_digits=5, right_digits=2)))
         operation = fake.random_element(elements=(add, subtract, multiply, divide))
         if operation == 'divide' and b == (0):
             b = Decimal('1')
+        # Calculate the expected result based on the selected operation
         expected = {
             add: lambda a, b: a + b,
             subtract: lambda a, b: a - b,
             multiply: lambda a, b: a * b,
             divide: lambda a, b: a / b if b != 0 else float('inf'),
         }[operation](a, b)
+        # Yield the generated record
         yield a, b, operation, expected
 
 
@@ -51,6 +57,7 @@ def test_calculation_operations(calculation_records):
         records (tuple): 
         A tuple containing the operands 'a' and 'b', the operation, and the expected result.
     """
+    # Unpack the calculation record
     a, b, operation, expected = calculation_records
     # Create a Calculation instance with the provided operands and operation.
     calc = Calculation(a, b, operation)
