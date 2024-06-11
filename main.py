@@ -29,7 +29,11 @@ def calculate_and_print(a, b, operation_name):
         result = operation_mappings.get(operation_name) 
         # Get the Calculator method corresponding to the operation name
         if result:
-            print(f"The result of {a} {operation_name} {b} is equal to {result(a_decimal, b_decimal)}")
+            # check if dividion and print division by zero errors
+            if operation_name == 'divide' and b_decimal == 0:
+                print("An error occurred: Cannot divide by zero")
+            else:
+                print(f"The result of {a} {operation_name} {b} is equal to {result(a_decimal, b_decimal)}")
             # Perform the operation and print the result
         else:
             print(f"Unknown operation: {operation_name}")
