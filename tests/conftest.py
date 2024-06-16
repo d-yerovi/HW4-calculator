@@ -22,12 +22,11 @@ def num_records_to_generate(request):
     # Get the number of records to generate from the pytest command-line option
     return request.config.getoption("--num_records")
 
-@pytest.fixture(params=range(1))
-def records(request):
+@pytest.fixture
+def records(num_records_to_generate):
     """Generate records for testing calculation operations"""
-    # Get the number of records to generate
-    num_records = num_records_to_generate(request)
-    for _ in range(num_records):
+    result = []
+    for _ in range(num_records_to_generate):
         # Generate two random decimal numbers
         a = Decimal(str(fake.pydecimal(left_digits=5, right_digits=2)))
         b = Decimal(str(fake.pydecimal(left_digits=5, right_digits=2)))
@@ -41,25 +40,23 @@ def records(request):
             multiply: lambda a, b: a * b,
             divide: lambda a, b: a / b if b != 0 else float('inf'),
         }[operation](a, b)
-        # Yield the generated record
-        yield a, b, operation, expected
+        # Append the generated record to the result list
+        result.append((a, b, operation, expected))
+    return result
 
 
-def test_calculation_operations(calculation_records):
+def test_calculation_operations(records):
     """
     Test calculation operations with various scenarios.
     
     This test ensures that the Calculation class correctly performs the arithmetic operation
     (specified by the 'operation' parameter) on two Decimal operands ('a' and 'b'),
     and that the result matches the expected outcome.
-    
-    Parameters:
-        records (tuple): 
-        A tuple containing the operands 'a' and 'b', the operation, and the expected result.
     """
-    # Unpack the calculation record
-    a, b, operation, expected = calculation_records
-    # Create a Calculation instance with the provided operands and operation.
-    calc = Calculation(a, b, operation)
-    # Perform the operation and assert that the result matches the expected value.
-    assert calc.perform() == expected, f"Failed {operation.__name__} operation with {a} and {b}"
+    for record in records:
+        # Unpack the calculation record
+        a, b, operation, expected = record
+        # Create a Calculation instance with the provided operands and operation.
+        calc = Calculation(a, b, operation)
+        # Perform the operation and assert that the result matches the expected value.
+        assert calc.perform() == expected, f"Failed {operation.__name__} operation with {a} and {b}"
